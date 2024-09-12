@@ -1,0 +1,9 @@
+{
+  "profiles": {
+    "Pet_Project_Backend": {
+      "commandName": "Project",
+      "commandLineArgs": "--port 7071",
+      "launchBrowser": false
+    }
+  }
+}
