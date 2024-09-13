@@ -124,7 +124,7 @@ namespace Pet_Project_Backend
                 }
                 return new Responses() { Message = $"Employee with ID : {id} is successfully deleted.", Success = true };
             }
-            catch (CosmosException ex)
+            catch (Exception)
             {
                 return new Responses() { Message = "ID not found. To Delete the Employee you need to mention existing ID.", Success = false };
             }

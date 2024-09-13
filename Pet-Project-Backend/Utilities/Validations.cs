@@ -67,7 +67,7 @@ namespace Pet_Project_Backend.Utilities
             // Validating Id
             if (string.IsNullOrEmpty(employee.Id))
             {
-                validationErrors.Add("Id should be mentioned");
+                validationErrors.Add("Id is null.");
             }
             return validationErrors;
         }
