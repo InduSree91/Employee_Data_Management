@@ -27,7 +27,7 @@ namespace Pet_Project_Backend
     public class EmployeeData
     {
         public static readonly string cosmosConnectionString = Environment.GetEnvironmentVariable("CosmosDBConnectionString");
-        public static readonly string databaseName = "Pet-Project-Backend";
+        public static readonly string databaseName = "Employee_Mgmt";
         public static readonly string containerName = "Employee";
 
         // PUT
@@ -57,14 +57,11 @@ namespace Pet_Project_Backend
                     existingItem.DOB = data?.DOB;
                     existingItem.Phone = data?.Phone;
                     existingItem.Email = data?.Email;
+                    existingItem.Age = data.Age;
 
                     var result = await container.ReplaceItemAsync(existingItem, id, new PartitionKey(id));
                     return new EntityData<dynamic> { Message = "Item updated Successfully.", Success = true, Data = result.Resource };
                 }
-            }
-            catch (CosmosException ex) when (ex.StatusCode == HttpStatusCode.NotFound)
-            {
-                return new Responses { Message = "Id not Found", Success = false, };
             }
             catch (Exception ex)
             {
@@ -127,7 +124,7 @@ namespace Pet_Project_Backend
                 }
                 return new Responses() { Message = $"Employee with ID : {id} is successfully deleted.", Success = true };
             }
-            catch (CosmosException ex) when (ex.StatusCode == HttpStatusCode.NotFound)
+            catch (CosmosException ex)
             {
                 return new Responses() { Message = "ID not found. To Delete the Employee you need to mention existing ID.", Success = false };
             }

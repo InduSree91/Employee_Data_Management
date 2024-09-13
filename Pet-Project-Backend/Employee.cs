@@ -14,10 +14,10 @@ namespace Pet_Project_Backend
         [JsonProperty("name")]        
         public string Name { get; set; }
 
-        [JsonProperty("date_of_birth")]
+        [JsonProperty("DOB")]
         public string DOB { get; set; }
 
-        [JsonProperty("phone_number")]
+        [JsonProperty("phone Number")]
         public string Phone { get; set; }
 
         [JsonProperty("email")]
