@@ -30,45 +30,6 @@ namespace Pet_Project_Backend
         public static readonly string databaseName = "Employee_Mgmt";
         public static readonly string containerName = "Employee";
 
-        // PUT
-        [FunctionName("UpdateEmployee")]
-        public static async Task<Responses> UpdateEmployee([HttpTrigger(AuthorizationLevel.Function, HttpTriggers.HttpTriggerUpdate, Route = Routes.UpdateEmployeeById)] HttpRequest req, ILogger log, string id)
-        {
-            try
-            {
-                string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-                Employee data = JsonConvert.DeserializeObject<Employee>(requestBody);
-                var validator = new Validations();
-                List<string> validationErrors = validator.validation(data);
-                if (validationErrors.Count > 0)
-                {
-                    return new EntityData<dynamic> { Data = validationErrors };
-                }
-                var age = new CalculateAge();
-                data.Age = age.AgeCalculation(data.DOB);
-                using (var cosmosClient = new CosmosClient(cosmosConnectionString))
-                {
-                    var container = cosmosClient.GetContainer(databaseName, containerName);
-                    ItemResponse<Employee> response = await container.ReadItemAsync<Employee>(id, new PartitionKey(id));
-
-                    Employee existingItem = response.Resource;
-
-                    existingItem.Name = data?.Name;
-                    existingItem.DOB = data?.DOB;
-                    existingItem.Phone = data?.Phone;
-                    existingItem.Email = data?.Email;
-                    existingItem.Age = data.Age;
-
-                    var result = await container.ReplaceItemAsync(existingItem, id, new PartitionKey(id));
-                    return new EntityData<dynamic> { Message = "Item updated Successfully.", Success = true, Data = result.Resource };
-                }
-            }
-            catch (Exception ex)
-            {
-                return new Responses { Message = ex.Message, Success = false };
-            }
-        }
-
         // POST
         [FunctionName("CreateEmployee")]
         public static async Task<Responses> CreateEmployee([HttpTrigger(AuthorizationLevel.Function, HttpTriggers.HttpTriggerCreate, Route = Routes.CreateEmployee)] HttpRequest req, ILogger log)
@@ -110,6 +71,45 @@ namespace Pet_Project_Backend
             }
         }
 
+        // PUT
+        [FunctionName("UpdateEmployee")]
+        public static async Task<Responses> UpdateEmployee([HttpTrigger(AuthorizationLevel.Function, HttpTriggers.HttpTriggerUpdate, Route = Routes.UpdateEmployeeById)] HttpRequest req, ILogger log, string id)
+        {
+            try
+            {
+                string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
+                Employee data = JsonConvert.DeserializeObject<Employee>(requestBody);
+                var validator = new Validations();
+                List<string> validationErrors = validator.validation(data);
+                if (validationErrors.Count > 0)
+                {
+                    return new EntityData<dynamic> { Data = validationErrors };
+                }
+                var age = new CalculateAge();
+                data.Age = age.AgeCalculation(data.DOB);
+                using (var cosmosClient = new CosmosClient(cosmosConnectionString))
+                {
+                    var container = cosmosClient.GetContainer(databaseName, containerName);
+                    ItemResponse<Employee> response = await container.ReadItemAsync<Employee>(id, new PartitionKey(id));
+
+                    Employee existingItem = response.Resource;
+
+                    existingItem.Name = data?.Name;
+                    existingItem.DOB = data?.DOB;
+                    existingItem.Phone = data?.Phone;
+                    existingItem.Email = data?.Email;
+                    existingItem.Age = data.Age;
+
+                    var result = await container.ReplaceItemAsync(existingItem, id, new PartitionKey(id));
+                    return new EntityData<dynamic> { Message = "Item updated Successfully.", Success = true, Data = result.Resource };
+                }
+            }
+            catch (Exception ex)
+            {
+                return new Responses { Message = ex.Message, Success = false };
+            }
+        }        
+
         // DELETE BY ID
         [FunctionName("DeleteEmployeeById")]
         public static async Task<Responses> DeleteEmployeeById([HttpTrigger(AuthorizationLevel.Function, HttpTriggers.HttpTriggerDelete, Route = Routes.DeleteEmployeeById)] HttpRequest req, ILogger log, string id)
@@ -119,7 +119,6 @@ namespace Pet_Project_Backend
                 using (var cosmosClient = new CosmosClient(cosmosConnectionString))
                 {
                     var container = cosmosClient.GetContainer(databaseName, containerName);
-                    ItemResponse<Employee> existingEmployee = await container.ReadItemAsync<Employee>(id, new PartitionKey(id));
                     var response = await container.DeleteItemAsync<Employee>(id, new PartitionKey(id));
                 }
                 return new Responses() { Message = $"Employee with ID : {id} is successfully deleted.", Success = true };
@@ -160,15 +159,17 @@ namespace Pet_Project_Backend
         [FunctionName("GetEmployeeById")]
         public static async Task<Responses> GetEmployeeById([HttpTrigger(AuthorizationLevel.Function, HttpTriggers.HttpTriggetGet, Route = Routes.GetEmployeeById)] HttpRequest req, ILogger log, string id)
         {
-            var cosmosClient = new CosmosClient(cosmosConnectionString);
-            var container = cosmosClient.GetContainer(databaseName, containerName);
-
             try
             {
-                ItemResponse<Employee> employee = await container.ReadItemAsync<Employee>(id, new PartitionKey(id));
-                log.LogInformation($"ID Found. Proceeds with the retrival of the Employee data with ID : {id} .");
+                using (var cosmosClient = new CosmosClient(cosmosConnectionString))
+                {
+                    var container = cosmosClient.GetContainer(databaseName, containerName);
 
-                return new EntityData<Employee>() { Message = $"Retrieved the data of the ID : {id}.", Success = true, Data = employee.Resource };
+                    ItemResponse<Employee> employee = await container.ReadItemAsync<Employee>(id, new PartitionKey(id));
+                    log.LogInformation($"ID Found. Proceeds with the retrival of the Employee data with ID : {id} .");
+
+                    return new EntityData<Employee>() { Message = $"Retrieved the data of the ID : {id}.", Success = true, Data = employee.Resource };
+                }
             }
             catch (Exception)
             {

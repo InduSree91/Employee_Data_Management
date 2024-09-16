@@ -27,7 +27,7 @@ namespace Pet_Project_Backend.Utilities
             }
             if (!Regex.IsMatch(employee.Name, @"^[A-Za-z]+(?:[\s][A-Za-z]+)*$"))
             {
-                validationErrors.Add($"Name : '{employee.Name}' is not valid. Name should only contain alphabets.");
+                validationErrors.Add("Name is not valid. Name should only contain alphabets.");
             }
 
             // Validate Date Of Birth
@@ -51,7 +51,7 @@ namespace Pet_Project_Backend.Utilities
             }
             if (!Regex.IsMatch(employee.Phone, @"^[0-9]{1,10}$"))
             {
-                validationErrors.Add($"Phone number: '{employee.Phone}' is not valid. Phone number should only contains numbers.");
+                validationErrors.Add("Phone number is not valid. Phone number should only contains numbers.");
             }
 
             // Validating Email
@@ -61,7 +61,7 @@ namespace Pet_Project_Backend.Utilities
             }
             if (!Regex.IsMatch(employee.Email, @"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"))
             {
-                validationErrors.Add($"Email: '{employee.Email}' is not valid. Enter a valid email.");
+                validationErrors.Add("Email is not valid. Enter a valid email.");
             }
 
             // Validating Id
