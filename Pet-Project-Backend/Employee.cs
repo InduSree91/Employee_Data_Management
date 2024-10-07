@@ -14,6 +14,9 @@ namespace Pet_Project_Backend
         [JsonProperty("name")]        
         public string Name { get; set; }
 
+        [JsonProperty("gender")]
+        public string Gender { get; set; }
+
         [JsonProperty("DOB")]
         public string DOB { get; set; }
 

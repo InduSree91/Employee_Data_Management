@@ -33,7 +33,7 @@ namespace Pet_Project_Backend.Utilities
             // Validate Date Of Birth
             if (string.IsNullOrEmpty(employee.DOB))
             {
-                validationErrors.Add("Date of Birth should be mentioned");
+                validationErrors.Add("Date of Birth should be mentioned.");
             }
             if (!Regex.IsMatch(employee.DOB, @"^(0[1-9]|[12][0-9]|3[01])/(0[1-9]|1[0-2])/\d{4}$"))
             {
