@@ -30,6 +30,12 @@ namespace Pet_Project_Backend.Utilities
                 validationErrors.Add("Name is not valid. Name should only contain alphabets.");
             }
 
+            // Validate Gender
+            if(string.IsNullOrEmpty(employee.Gender))
+            {
+                validationErrors.Add("Gender should be mentioned.");
+            }
+
             // Validate Date Of Birth
             if (string.IsNullOrEmpty(employee.DOB))
             {
