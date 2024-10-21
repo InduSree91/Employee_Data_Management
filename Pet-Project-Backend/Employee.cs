@@ -20,7 +20,7 @@ namespace Pet_Project_Backend
         [JsonProperty("DOB")]
         public string DOB { get; set; }
 
-        [JsonProperty("phone Number")]
+        [JsonProperty("phone")]
         public string Phone { get; set; }
 
         [JsonProperty("email")]

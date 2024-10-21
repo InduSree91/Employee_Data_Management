@@ -99,6 +99,7 @@ namespace Pet_Project_Backend
                     existingItem.Phone = data?.Phone;
                     existingItem.Email = data?.Email;
                     existingItem.Age = data.Age;
+                    existingItem.Gender = data.Gender;
 
                     var result = await container.ReplaceItemAsync(existingItem, id, new PartitionKey(id));
                     return new EntityData<dynamic> { Message = "Item updated Successfully.", Success = true, Data = result.Resource };
